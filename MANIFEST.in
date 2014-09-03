@@ -1,0 +1,4 @@
+include hts/hts_concat.h
+include hts/test/*
+include hts/hts_extra.h
+include hts/hts_extra.c
