@@ -1,7 +1,7 @@
 hts-python
 ==========
 
-pythonic wrapper for [htslib](https://github.com/samtools/htslib.git htslib) C-API using python [cffi](https://cffi.readthedocs.org/).
+pythonic wrapper for [htslib](https://github.com/samtools/htslib.git) C-API using python [cffi](https://cffi.readthedocs.org/).
 
 TODO
 ----
