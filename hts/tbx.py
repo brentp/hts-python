@@ -26,7 +26,7 @@ class Tbx(object):
             elif fname.endswith(('.vcf.gz')):
                 Tbx.build(fname, 1, 2, 0, '#', 0)
             else:
-                raise Exception('%s.tbi not found and filetype not known' % fn)
+                raise Exception('%s.tbi not found and filetype not known' % fname)
 
         tbx = self._tbx = libhts.tbx_index_load(fname);
         _raise_if_null(tbx, "Tbx:unable to find %s.tbi" % fname)
