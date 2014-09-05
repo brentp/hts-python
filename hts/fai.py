@@ -52,6 +52,7 @@ class Fai(object):
         self._fai = libhts.fai_load(fn)
         atexit.register(libhts.fai_destroy, self._fai)
         self.fn = fn
+
     def __call__(self, region):
         """Extract a region.
 
@@ -78,6 +79,7 @@ class Fai(object):
         return bool(libhts.faidx_has_seq(self._fai, seq))
 
     def __iter__(self):
+        """Generate names and lengths of the sequences."""
         with open(self.fn + ".fai") as fai:
             for toks in (l.rstrip("\r\n").split("\t") for l in fai):
                 yield toks[0], int(toks[1])

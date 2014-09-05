@@ -105,18 +105,14 @@ class Alignment(object):
 
     @classmethod
     def from_sam_str(cls, sam_str, bam_hdr):
-        s = ffi.new("kstring_t *")
-        libhts.kputsn("", 0, s)
-        b = libhts.bam_init1()
-        print("OK", file=sys.stderr)
-        res = libhts.sam_parse1(s, bam_hdr, b)
-        print("OK2", file=sys.stderr)
-        assert res < 0, ("SAM parse error")
-        b2 = libhts.bam_dup1(b)
-        h2 = libhts.bam_hdr_dup(bam_hdr)
-        print(b2, h2)
+        s = ffi.new('kstring_t *', {'m': 0, 'l': 0, 's': ffi.NULL})
+        libhts.kputsn(sam_str, len(sam_str) + 1, s)
 
-        return cls(b2, h2)
+        b = libhts.bam_init1()
+        res = libhts.sam_parse1(s, bam_hdr, b)
+        assert res <= 0, ("SAM parse error", res)
+        h2 = libhts.bam_hdr_dup(bam_hdr)
+        return Alignment(b, h2)
 
     @property
     def tname(self):
@@ -182,14 +178,6 @@ class Alignment(object):
         assert r == kstr.l, (r, kstr.l)
         return ffi.string(kstr.s)
         
-        # old way relying only on core functions
-        _lookup={1: 'A', 2: 'C', 4: 'G', 8: 'T', 15: 'N'}
-        seq = "".join(_lookup[r[(i)>>1] >> ((~(i)&1)<<2) & 0xf] \
-                for i in range(self._b.core.l_qseq))
-        #if libhts.bam_is_rev(self._b):
-        #    return seq.translate(complement)[::-1]
-        return seq
-
     @property
     def flag_str(self):
         """Alignment flag as a string."""
@@ -353,8 +341,11 @@ Writing.
     >>> next(b) == a
     True
 
-    #>>> c = Alignment.from_sam_str(str(a), a._h)
-    #>>> str(c)
+    # string to object back to string.
+    >>> s = str(a)
+    >>> c = Alignment.from_sam_str(s, a._h)
+    >>> str(c) == s
+    True
     """
 
     def __init__(self, fname, mode="r", create_index="auto", header=None, fasta=None):
