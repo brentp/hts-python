@@ -3,8 +3,6 @@ hts-python
 
 pythonic wrapper for [htslib](https://github.com/samtools/htslib.git) C-API using python [cffi](https://cffi.readthedocs.org/).
 
-TODO
-----
 There is enough functionality for this to be useful, but it still needs a lot of work.
 
 
@@ -66,8 +64,16 @@ When C-functions not provided by the api are needed, they are added to `hts_extr
 
 One can run the tests with: `python -c "import hts; hts.doctests()"`
 
+Things to work on:
+
+1. Make properties settable in hts.bam. 
+   Currently, they are read-only properties. At very least, it will be useful
+   to have setters for seq, base_q, qname, tname, pos, strand, flag.
+
+2. Wrap B/VCF stuff?
+
+
 Why
 ---
 
-Why use this when `pysam` exists? I wanted to experiment with python cffi and to make a more
-pythonic access.
+Why use this when `pysam` exists? It's an experiment with python cffi and to provide a pythonic access to htslib.
