@@ -141,6 +141,11 @@ class Alignment(object):
         """Left-most position of alignment."""
         return self._b.core.pos
 
+    @pos.setter
+    def pos(self, value):
+        """Set the position."""
+        self._b.core.pos = value
+
     @property
     def isize(self):
         """Insert size of alignment if applicable."""
@@ -150,6 +155,11 @@ class Alignment(object):
     def mapping_quality(self):
         """Mapping quality of alignment."""
         return self._b.core.qual
+
+    @mapping_quality.setter
+    def mapping_quality(self, value):
+        """Set the mapping quality to a new value."""
+        self._b.core.qual = value
 
     map_q = mapping_quality
 
@@ -177,7 +187,7 @@ class Alignment(object):
         r = libhts.bam_get_read_seq(self._b, kstr)
         assert r == kstr.l, (r, kstr.l)
         return ffi.string(kstr.s)
-        
+
     @property
     def flag_str(self):
         """Alignment flag as a string."""
@@ -283,8 +293,8 @@ class Bam(object):
 
     >>> a.flag, a.flag_str
     (16, 'REVERSE')
-    >>> a.base_qualities
-    [56, 63, 53, 62, 64, 62, 51, 44, 58, 59, 62, 53, 63, 64, 65, 65, 63, 61, 61, 48, 60, 48, 57, 64, 64, 64, 64, 64, 62, 64, 64, 64, 64, 64, 64, 64]
+    >>> a.base_qualities[:10]
+    [56, 63, 53, 62, 64, 62, 51, 44, 58, 59]
 
     >>> a.mapping_quality # or a.map_q
     3
@@ -310,12 +320,15 @@ class Bam(object):
     # the base-quality of b is set to 0.
     >>> b = a.copy()
 
-    #>>> a.adjust_overlap_quality(b)
-    #>>> a.base_q[:10]
-    #[112, 126, 106, 124, 128, 124, 102, 88, 116, 118]
+    >>> a.adjust_overlap_quality(b)
+    >>> a.base_q[:10]
+    [112, 126, 106, 124, 128, 124, 102, 88, 116, 118]
 
-    #>>> all(bq == 0 for bq in b.base_q)
-    #True
+    >>> b.base_q[:10]
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+    >>> all(bq == 0 for bq in b.base_q)
+    True
 
 Writing.
 
@@ -327,7 +340,7 @@ Writing.
     >>> cnew.seq == c.seq
     True
 
-    >>> (cnew == c, b == a)
+    >>> (cnew == c, b.qname == a.qname)
     (True, True)
 
     we can also create a new writable bam with a fasta to create the bam header:
@@ -340,6 +353,17 @@ Writing.
 
     >>> next(b) == a
     True
+
+
+    >>> a.pos
+    9329
+    >>> a.pos += 1
+    >>> a.pos
+    9330
+
+    >>> assert a.map_q == 3
+    >>> a.map_q += 55
+    >>> assert a.mapping_quality == 58
 
     # string to object back to string.
     >>> s = str(a)
