@@ -103,6 +103,14 @@ class Alignment(object):
         """Read (query) name."""
         return ffi.string(libhts.bam_get_qname(self._b))
 
+    @qname.setter
+    def qname(self, name):
+        """Set (query) name."""
+        raise NotImplemented
+        # need to check if proposed name is longer/shorter
+        # than current and calloc self._b.data based on that!!!
+        current_name = libhts.bam_get_qname(self._b)
+
     @classmethod
     def from_sam_str(cls, sam_str, bam_hdr):
         s = ffi.new('kstring_t *', {'m': 0, 'l': 0, 's': ffi.NULL})
@@ -370,6 +378,9 @@ Writing.
     >>> c = Alignment.from_sam_str(s, a._h)
     >>> str(c) == s
     True
+
+    #>>> a.qname == "HELLO"
+    #>>> assert "HELLO" in str(a)
     """
 
     def __init__(self, fname, mode="r", create_index="auto", header=None, fasta=None):
