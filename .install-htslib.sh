@@ -8,6 +8,6 @@ git checkout develop
 make
 
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(pwd)
-export C_INCLUDE_PATH=$C_INCLUDE_PATH:$(pwd)
+export C_INCLUDE_PATH=$(pwd):$(dirname $(pwd))
 
 sudo ldconfig
