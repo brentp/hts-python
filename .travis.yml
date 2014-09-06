@@ -7,8 +7,8 @@ before_install:
   - ./.install-htslib.sh
 
 install:
-  - pip install cffi
-  - python setup.py develop
+  - sudo pip install cffi
+  - sudo python setup.py develop
 
 script:
   - python -c "import hts; hts.doctests()"
