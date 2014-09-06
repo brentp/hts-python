@@ -3,9 +3,11 @@ python:
   - "2.6"
   - "2.7"
 
+before_install:
+  - ./.install-htslib.sh
+
 install:
   - pip install cffi
-  - ./.install-htslib.sh
   - python setup.py develop
 
 script:
