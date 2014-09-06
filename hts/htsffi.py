@@ -33,5 +33,5 @@ libhts = ffi.verify('''
     ext_package='htsffii',
     depends=["%s/hts_extra.h" % HERE],
     sources=["%s/hts_extra.c" % HERE],
-    include_dirs=[HERE],
+    include_dirs=[HERE, "/usr/include/", "/usr/local/include/"],
 )

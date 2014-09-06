@@ -60,7 +60,7 @@ Installation
 Development
 -----------
 
-This is a work in progress that relies on the hts library as opposed to the sources. All of the wrapped functions are included in `hts/hts_concat.h` and then available from python as, e.g. `htslib.sam_read1`
+This is a work in progress that relies on the hts library. All of the wrapped functions are included in `hts/hts_concat.h` and then available from python as, e.g. `htslib.sam_read1`
 
 When C-functions not provided by the api are needed, they are added to `hts_extra.c/.h`.
 
