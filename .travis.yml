@@ -5,7 +5,7 @@ python:
 
 install:
   - pip install -e .
-  - ./.install-bedtools.sh
+  - ./.install-htslib.sh
 
 script:
   - python -c "import hts; hts.doctests()"
