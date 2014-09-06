@@ -4,4 +4,4 @@ BRANCH=develop
 git clone https://github.com/samtools/htslib.git ${DIR}/htslib
 cd ${DIR}/htslib
 git checkout $BRANCH
-make
+make install
