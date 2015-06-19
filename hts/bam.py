@@ -463,8 +463,9 @@ Writing.
 
     def next(self):
         """Iterate over all alignments returning Alignment object."""
-        libhts.sam_read1(self._htf, self.header._h, self._b)
-        return Alignment(self._b, self.header._h)
+        if libhts.sam_read1(self._htf, self.header._h, self._b) >= 0:
+            return Alignment(self._b, self.header._h)
+        raise StopIteration()
 
     def __call__(self, region):
         """Perform a region query.
