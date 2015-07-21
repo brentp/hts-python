@@ -47,7 +47,7 @@ class Fai(object):
         if fn.endswith(".fai"):
             fn = fn[:-4]
         assert op.exists(fn), (fn, "does not exist")
-        if not op.exists("%s.fai"):
+        if not op.exists("%s.fai" % fn):
             assert libhts.fai_build(fn) == 0
         self._fai = libhts.fai_load(fn)
         atexit.register(libhts.fai_destroy, self._fai)
