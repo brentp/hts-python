@@ -62,7 +62,7 @@ class Fai(object):
         region: str
         """
         rlen = ffi.new("int *")
-        seq = libhts.fai_fetch(self._fai, 'chr1:1-15', rlen)
+        seq = libhts.fai_fetch(self._fai, region, rlen)
         if rlen == -2:
             raise Exception("sequence not present")
         elif rlen == -1:
