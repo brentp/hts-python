@@ -1,5 +1,6 @@
 from __future__ import print_function, division
 from cffi import FFI
+import os
 import os.path as op
 import atexit
 
@@ -16,7 +17,6 @@ with open(op.join(HERE, "hts_concat.h")) as headers:
 with open(op.join(HERE, "hts_extra.h")) as headers:
     ffi.cdef(headers.read())
 
-
 libhts = ffi.verify('''
 #include "stdlib.h"
 #include <zlib.h>
@@ -30,8 +30,9 @@ libhts = ffi.verify('''
 #include "hts_extra.h"
 ''',
     libraries=['c', 'z', 'hts'],
+    library_dirs=["/usr/lib", "/usr/local/lib"] + os.environ.get("LD_LIBRARY_PATH").split(":"),
     ext_package='htsffii',
     depends=["%s/hts_extra.h" % HERE],
     sources=["%s/hts_extra.c" % HERE],
-    include_dirs=[HERE, "/usr/include/", "/usr/local/include/"],
+    include_dirs=[HERE] + os.environ.get('C_INCLUDE_PATH', '').split(":") + ["/usr/include/", "/usr/local/include/"],
 )
