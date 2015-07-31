@@ -30,7 +30,7 @@ libhts = ffi.verify('''
 #include "hts_extra.h"
 ''',
     libraries=['c', 'z', 'hts'],
-    library_dirs=["/usr/lib", "/usr/local/lib"] + os.environ.get("LD_LIBRARY_PATH").split(":"),
+    library_dirs=["/usr/lib", "/usr/local/lib"] + os.environ.get("LD_LIBRARY_PATH", "").split(":"),
     ext_package='htsffii',
     depends=["%s/hts_extra.h" % HERE],
     sources=["%s/hts_extra.c" % HERE],
