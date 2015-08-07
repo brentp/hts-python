@@ -126,7 +126,11 @@ class Alignment(object):
     def tname(self):
         """Chromosome or sequence aligned to."""
         tid = self._b.core.tid
+        if tid == -1:  # Read is unaligned, have no target
+            return None
+
         return ffi.string(self._h.target_name[tid])
+
     target = tname
 
     @property
