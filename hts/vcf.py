@@ -3,12 +3,15 @@ from .htsffi import libhts, ffi, _raise_if_null
 
 class VCF(object):
     r"""
-    >>> v = VCF('/usr/local/src/gocode/src/github.com/brentp/vcfgo/examples/test.query.vcf')
-    >>> v #doctest: +ELLIPSIS
+    >>> vcf = VCF('/usr/local/src/gocode/src/github.com/brentp/vcfgo/examples/test.query.vcf')
+    >>> vcf #doctest: +ELLIPSIS
     VCF('...')
 
-    >>> next(v)
+    >>> v = next(vcf)
+    >>> v
     Variant('chr1:30547')
+
+    >>> v.formats
 
     """
 
@@ -40,6 +43,8 @@ class Variant(object):
 
     def __init__(self, bcf_t, vcf):
         self._bcf = bcf_t
+        libhts.bcf_unpack(bcf_t, 15)  # unpack everything.
+
         self.vcf = vcf
         self.chrom = vcf.seq(bcf_t.rid)
         self.pos = bcf_t.pos
@@ -47,7 +52,13 @@ class Variant(object):
     def __repr__(self):
         return "%s('%s:%d')" % (self.__class__.__name__, self.chrom, self.pos)
 
+    @property
+    def formats(self):
+        return Format(self._bcf.d.fmt)
 
+class Format(object):
+    def __init__(self, fmt_t):
+        self._fmt_t = fmt_t
 
 
 

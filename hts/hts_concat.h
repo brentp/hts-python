@@ -368,6 +368,8 @@ int bcf_read(htsFile *fp, const bcf_hdr_t *h, bcf1_t *v);
 
 static inline const char *bcf_hdr_id2name(const bcf_hdr_t *hdr, int rid);
 
+int bcf_unpack(bcf1_t *b, int which);
+
 
 //typedef htsFile vcfFile;
 
