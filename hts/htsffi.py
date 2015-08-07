@@ -26,6 +26,7 @@ libhts = ffi.verify('''
 #include "htslib/bgzf.h"
 #include "htslib/sam.h"
 #include "htslib/faidx.h"
+#include "htslib/vcf.h"
 #include "htslib/kfunc.h"
 #include "hts_extra.h"
 ''',

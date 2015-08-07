@@ -1,6 +1,7 @@
 from .fai import Fai
 from .tbx import Tbx
 from .bam import Bam
+from .vcf import VCF
 from .fisher import fisher_exact_test
 
 __version__ = "0.0.1"
@@ -12,6 +13,7 @@ def doctests():
     for name, mod in (("htsffi", hts.htsffi),
                       ("fai", hts.fai),
                       ("fisher", hts.fisher),
+                      ("vcf", hts.vcf),
                       ("bam", hts.bam)):
 
         mod = getattr(hts, name)
