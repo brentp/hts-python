@@ -64,7 +64,7 @@ class Alignment(object):
         s_aux_ptr = libhts.bam_get_aux(self._b)
         i = 0
         #print(str(self), file=sys.stderr)
-        while i + 4 < l:
+        while i + 4 <= l:
             key = "".join(chr(s) for s in s_aux_ptr[i:i + 2])
             ftype = chr(s_aux_ptr[i + 2])
             if ftype == 'Z':
@@ -436,7 +436,7 @@ Writing.
     @classmethod
     def header_from_fasta(self, fasta, sort_order='unknown'):
         """Create a sam header from a fasta file.
-        
+
         >>> import os.path as op
         >>> fa = '%s/test/t.fa' % op.dirname(__file__)
         >>> print(Bam.header_from_fasta(fa)) #doctest: +NORMALIZE_WHITESPACE
@@ -469,7 +469,7 @@ Writing.
 
     def __call__(self, region):
         """Perform a region query.
-        
+
         Parameters
         ----------
         region : str

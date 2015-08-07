@@ -77,7 +77,8 @@ class Tbx(object):
 
                 # convert the start and end columns to int
                 toks[start_col] = int(toks[start_col])
-                toks[end_col] = int(toks[end_col])
+                if end_col != -1:
+                    toks[end_col] = int(toks[end_col])
                 yield toks
 
                 slen = libhts.tbx_itr_next(self._htf, self._tbx, itr, s)

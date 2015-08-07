@@ -20,7 +20,7 @@ class Fai(object):
 
     >>> f = Fai('%s/test/t.fa' % op.dirname(__file__))
     >>> f('chr1:1-10')
-    'AGAAAACCCCCCCAC'
+    'AGAAAACCCC'
     >>> f.nseqs
     1
     >>> 'chr1' in f
