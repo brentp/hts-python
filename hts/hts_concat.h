@@ -324,6 +324,8 @@ typedef struct {
 
 typedef struct {
 	...;
+	int32_t n[3];
+
 } bcf_hdr_t;
 
 
@@ -370,7 +372,10 @@ static inline const char *bcf_hdr_id2name(const bcf_hdr_t *hdr, int rid);
 
 int bcf_unpack(bcf1_t *b, int which);
 
+const int BCF_DT_SAMPLE = 2;
 
+int bcf_get_genotypes(const bcf_hdr_t *hdr, bcf1_t *line, int **dst, int *ndst);
+int bcf_get_format_values(const bcf_hdr_t *hdr, bcf1_t *line, const char *tag, void **dst, int *ndst, int type);
 //typedef htsFile vcfFile;
 
 

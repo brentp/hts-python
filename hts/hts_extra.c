@@ -1,4 +1,5 @@
 #include "htslib/sam.h"
+#include "htslib/vcf.h"
 #include "htslib/kstring.h"
 
 
@@ -11,6 +12,34 @@ int bam_get_read_seq(bam1_t *b, kstring_t * str){
     uint8_t *s = bam_get_seq(b);
     for (; i < b->core.l_qseq; ++i) kputc("=ACMGRSVTWYHKDBN"[bam_seqi(s, i)], str);
     return i;
+}
+
+int as_gts(int *gts, int num_samples) {
+	int j = 0, i;
+	for (i = 0; i < 2 * num_samples; i += 2){
+	    if (bcf_gt_is_missing(gts[i]) && bcf_gt_is_missing(gts[i+1])){
+			gts[j++] = 2; // unknown
+			continue;
+		}
+		int a = bcf_gt_allele(gts[i]);
+		int b = bcf_gt_allele(gts[i+1]);
+
+	    if((a == 0) && (b == 0)) {
+			gts[j] = 0; //  HOM_REF
+		}
+		else if((a == 1) && (b == 1)) {
+			gts[j] = 3; //  HOM_ALT
+		}
+		else if((a  != b)) {
+			gts[j] = 1; //  HET
+		} else {
+			gts[j] = 2; // unknown
+		}
+		j++;
+	}
+	// free the latter part of the array that we don't need.
+	//free((void *)(&(gts[j])));
+	return j;
 }
 
 
@@ -28,9 +57,9 @@ static inline int cigar_iref2iseq_set(uint32_t **cigar, uint32_t *cigar_max, int
 
         if ( cig==BAM_CSOFT_CLIP ) { (*cigar)++; *iseq += ncig; *icig = 0; continue; }
         if ( cig==BAM_CHARD_CLIP || cig==BAM_CPAD ) { (*cigar)++; *icig = 0; continue; }
-        if ( cig==BAM_CMATCH || cig==BAM_CEQUAL || cig==BAM_CDIFF ) 
-        { 
-            pos -= ncig; 
+        if ( cig==BAM_CMATCH || cig==BAM_CEQUAL || cig==BAM_CDIFF )
+        {
+            pos -= ncig;
             if ( pos < 0 ) { *icig = ncig + pos; *iseq += *icig; *iref += *icig; return BAM_CMATCH; }
             (*cigar)++; *iseq += ncig; *icig = 0; *iref += ncig;
             continue;
@@ -54,11 +83,11 @@ static inline int cigar_iref2iseq_next(uint32_t **cigar, uint32_t *cigar_max, in
         int cig  = (**cigar) & BAM_CIGAR_MASK;
         int ncig = (**cigar) >> BAM_CIGAR_SHIFT;
 
-        if ( cig==BAM_CMATCH || cig==BAM_CEQUAL || cig==BAM_CDIFF ) 
+        if ( cig==BAM_CMATCH || cig==BAM_CEQUAL || cig==BAM_CDIFF )
         {
             if ( *icig >= ncig - 1 ) { *icig = 0;  (*cigar)++; continue; }
-            (*iseq)++; (*icig)++; (*iref)++; 
-            return BAM_CMATCH; 
+            (*iseq)++; (*icig)++; (*iref)++;
+            return BAM_CMATCH;
         }
         if ( cig==BAM_CDEL || cig==BAM_CREF_SKIP ) { (*cigar)++; (*iref) += ncig; *icig = 0; continue; }
         if ( cig==BAM_CINS ) { (*cigar)++; *iseq += ncig; *icig = 0; continue; }
@@ -67,7 +96,7 @@ static inline int cigar_iref2iseq_next(uint32_t **cigar, uint32_t *cigar_max, in
         fprintf(stderr,"todo: cigar %d\n", cig);
     }
     *iseq = -1;
-    *iref = -1; 
+    *iref = -1;
     return -1;
 }
 
@@ -104,7 +133,7 @@ void tweak_overlap_quality(bam1_t *a, bam1_t *b) {
         iref++;
         if ( a_iref+a->core.pos != b_iref+b->core.pos ) continue;   // only CMATCH positions, don't know what to do with indels
 
-        if ( bam_seqi(a_seq,a_iseq) == bam_seqi(b_seq,b_iseq) ) 
+        if ( bam_seqi(a_seq,a_iseq) == bam_seqi(b_seq,b_iseq) )
         {
             // we are very confident about this base
             int qual = a_qual[a_iseq] + b_qual[b_iseq];
