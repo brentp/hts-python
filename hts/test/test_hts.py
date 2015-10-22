@@ -9,10 +9,10 @@ def test_aux():
 
     b = Bam(SAM)
     r = next(b)
-    assert r.aux == [('NH', 'C', 1)], r.aux
+    assert r.tags == [('NH', 'C', 1)], r.aux
 
 def test_tname():
     b = Bam(SAM)
     r = next(b)
-    assert r.tname is None
+    assert r.target is None
 

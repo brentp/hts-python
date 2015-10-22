@@ -31,7 +31,7 @@ Alignment('HWUSI-NAME:2:69:512:1017#0')
 '-'
 >>> a.seq
 'TACAAATCTTACGTAAACACTCCAAGCATGAATTCG'
->>> a.base_q[:10]
+>>> a.qual[:10]
 [56, 63, 53, 62, 64, 62, 51, 44, 58, 59]
 
 >>> a.flag, a.flag_str
