@@ -43,6 +43,7 @@ class Cigar(object):
 class Alignment(object):
 
     """Alignment object; usually created by iterating over a `Bam` object."""
+    __slots__ = ("_b", "_h")
 
     def __init__(self, bam1_t, bam_hdr_t):
         self._b = bam1_t
