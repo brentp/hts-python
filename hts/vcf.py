@@ -1,11 +1,14 @@
 from __future__ import print_function
+import os
 import sys
 from .htsffi import libhts, ffi, _raise_if_null
 
 
 class VCF(object):
     r"""
-    >>> vcf = VCF('/usr/local/src/gocode/src/github.com/brentp/vcfgo/examples/test.query.vcf')
+
+    >>> import os.path as op
+    >>> vcf = VCF('%s/test/test.query.vcf' % op.dirname(__file__))
     >>> vcf #doctest: +ELLIPSIS
     VCF('...')
 
@@ -19,6 +22,8 @@ class VCF(object):
     """
 
     def __init__(self, fname, mode="r"):
+        if not os.path.exists(fname):
+            raise Exception("%s not found" % fname)
         htf = self._htf = libhts.hts_open(fname, mode)
         hdr = self._hdr = libhts.bcf_hdr_read(htf)
         assert libhts.bcf_hdr_set_samples(hdr, "-", 0) == 0, ("error setting samples")
