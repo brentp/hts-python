@@ -55,7 +55,7 @@ class Alignment(object):
         return Alignment(b, self._h)
 
     @property
-    def aux(self):
+    def tags(self):
         """The auxillary tags from the alignment."""
         auxs = []
         l = libhts.bam_get_l_aux(self._b)
@@ -111,6 +111,21 @@ class Alignment(object):
         # than current and calloc self._b.data based on that!!!
         current_name = libhts.bam_get_qname(self._b)
 
+    @property
+    def rnext(self):
+        tid = self._b.core.mtid
+        if tid == -1:
+            return None
+        return ffi.string(self._h.target_name[tid])
+
+    mate_chrom = rnext
+
+    @property
+    def pnext(self):
+        return self._b.core.mpos
+
+    mate_chrom = pnext
+
     @classmethod
     def from_sam_str(cls, sam_str, bam_hdr):
         s = ffi.new('kstring_t *', {'m': 0, 'l': 0, 's': ffi.NULL})
@@ -123,15 +138,15 @@ class Alignment(object):
         return Alignment(b, h2)
 
     @property
-    def tname(self):
+    def rname(self):
         """Chromosome or sequence aligned to."""
         tid = self._b.core.tid
         if tid == -1:  # Read is unaligned, have no target
             return None
 
         return ffi.string(self._h.target_name[tid])
+    target = rname
 
-    target = tname
 
     @property
     def strand(self):
@@ -146,7 +161,7 @@ class Alignment(object):
         if not has_qual: return None
         return [q_ptr[i] for i in range(self._b.core.l_qseq)]
 
-    base_q = base_qualities
+    qual = base_qualities
 
     @property
     def pos(self):
@@ -162,6 +177,7 @@ class Alignment(object):
     def isize(self):
         """Insert size of alignment if applicable."""
         return self._b.core.isize
+    tlen = isize
 
     @property
     def mapping_quality(self):
@@ -173,7 +189,7 @@ class Alignment(object):
         """Set the mapping quality to a new value."""
         self._b.core.qual = value
 
-    map_q = mapping_quality
+    mapq = mapping_quality
 
     @property
     def cigar(self):
@@ -213,8 +229,8 @@ class Alignment(object):
     def __eq__(self, other):
         """test equality."""
         if self.qname != other.qname: return False
-        if (self.pos, self.seq, self.map_q, self.qname) == \
-                (other.pos, other.seq, other.map_q, other.qname):
+        if (self.pos, self.seq, self.mapq, self.qname) == \
+                (other.pos, other.seq, other.mapq, other.qname):
             return True
         return False
 
@@ -272,7 +288,7 @@ class Bam(object):
     Alignment('HWUSI-NAME:2:69:512:1017#0')
     >>> a.qname
     'HWUSI-NAME:2:69:512:1017#0'
-    >>> a.tname # or a.target
+    >>> a.target
     'chr2L'
 
     >>> a.cigar
@@ -308,7 +324,7 @@ class Bam(object):
     >>> a.base_qualities[:10]
     [56, 63, 53, 62, 64, 62, 51, 44, 58, 59]
 
-    >>> a.mapping_quality # or a.map_q
+    >>> a.mapping_quality # or a.mapq
     3
     >>> a.pos
     9329
@@ -319,10 +335,10 @@ class Bam(object):
     >>> str(a)
     'HWUSI-NAME:2:69:512:1017#0\t16\tchr2L\t9330\t3\t36M\t*\t0\t0\tTACAAATCTTACGTAAACACTCCAAGCATGAATTCG\tY`V_a_TM[\\_V`abb`^^Q]QZaaaaa_aaaaaaa\tNM:i:0\tNH:i:2\tCC:Z:chrX\tCP:i:19096815'
 
-    >>> a.aux
+    >>> a.tags
     [('NM', 'C', 0), ('NH', 'C', 2), ('CC', 'Z', 'chrX'), ('CP', 'I', 19096815)]
 
-    >>> a.base_q[:10]
+    >>> a.base_qualities[:10]
     [56, 63, 53, 62, 64, 62, 51, 44, 58, 59]
 
     # for paired end reads, we may want to avoid double-counting
@@ -333,13 +349,13 @@ class Bam(object):
     >>> b = a.copy()
 
     >>> a.adjust_overlap_quality(b)
-    >>> a.base_q[:10]
+    >>> a.base_qualities[:10]
     [112, 126, 106, 124, 128, 124, 102, 88, 116, 118]
 
-    >>> b.base_q[:10]
+    >>> b.base_qualities[:10]
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
-    >>> all(bq == 0 for bq in b.base_q)
+    >>> all(bq == 0 for bq in b.base_qualities)
     True
 
 Writing.
@@ -373,9 +389,12 @@ Writing.
     >>> a.pos
     9330
 
-    >>> assert a.map_q == 3
-    >>> a.map_q += 55
+    >>> assert a.mapq == 3
+    >>> a.mapq += 55
     >>> assert a.mapping_quality == 58
+
+    >>> a.rnext, a.pnext # no mate
+    (None, -1)
 
     # string to object back to string.
     >>> s = str(a)
