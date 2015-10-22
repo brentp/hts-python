@@ -72,7 +72,7 @@ class Fai(object):
     @property
     def nseqs(self):
         """Count number of sequences in the fastq."""
-        return libhts.faidx_fetch_nseq(self._fai)
+        return libhts.faidx_nseq(self._fai)
 
     def __contains__(self, seq):
         """Test if a sequence name is in the fasta."""

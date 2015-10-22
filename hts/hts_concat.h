@@ -268,7 +268,7 @@ int fai_build(const char *fn);
 faidx_t *fai_load(const char *fn);
 //  @param  len  Length of the region; -2 if seq not present, -1 general error
 char *fai_fetch(const faidx_t *fai, const char *reg, int *len);
-int faidx_fetch_nseq(const faidx_t *fai);
+int faidx_nseq(const faidx_t *fai);
 char *faidx_fetch_seq(const faidx_t *fai, const char *c_name, int p_beg_i, int p_end_i, int *len);
 int faidx_has_seq(const faidx_t *fai, const char *seq);
 

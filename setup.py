@@ -21,7 +21,7 @@ def get_version(fname):
         raise ValueError("version could not be located")
 
 
-cffi.verifier.cleanup_tmpdir()
+#cffi.verifier.cleanup_tmpdir()
 ext = hts.htsffi.ffi.verifier.get_extension()
 
 setup(name='hts',
