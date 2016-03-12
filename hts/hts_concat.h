@@ -46,6 +46,7 @@ typedef struct {
 		struct hFILE *hfile;
 		void *voidp;
 	} fp;
+	...;
 } htsFile;
 
 htsFile *hts_open(const char *fn, const char *mode);
@@ -144,6 +145,7 @@ typedef struct {
         bam1_core_t core;
         int l_data, m_data;
         uint8_t *data;
+		...;
 } bam1_t;
 
 
@@ -323,7 +325,7 @@ typedef struct {
 
 typedef struct {
 	int32_t n[3];
-
+	...;
 } bcf_hdr_t;
 
 
