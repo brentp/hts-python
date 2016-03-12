@@ -66,13 +66,17 @@ When C-functions not provided by the api are needed, they are added to `hts_extr
 
 One can run the tests with: `python -c "import hts; hts.doctests()"`
 
+There is enough functionality for this to be quite useful but most of it
+is limited to getters, not setters, to, for example update an INFO field
+or modify the bam quality scores.
+
 Things to work on:
 
 1. Make properties settable in hts.bam. 
    Currently, they are read-only properties. At very least, it will be useful
    to have setters for seq, base_q, qname, tname, pos, strand, flag.
 
-2. Wrap B/VCF stuff?
+2. Wrap B/VCF stuff? (in progress)
 
 
 Why
