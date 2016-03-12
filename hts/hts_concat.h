@@ -24,8 +24,8 @@ void kputsn(char *, int, kstring_t *);
 //# BGZF
 //##########################
 typedef struct __bgzidx_t bgzidx_t;
-typedef struct z_stream_s { ...; } z_stream;
-struct BGZF { ...; };
+typedef struct z_stream_s z_stream;
+struct BGZF;
 typedef struct BGZF BGZF;
 BGZF* bgzf_open(const char* path, const char *mode);
 int bgzf_close(BGZF *fp);
@@ -46,7 +46,6 @@ typedef struct {
 		struct hFILE *hfile;
 		void *voidp;
 	} fp;
-        ... ;
 } htsFile;
 
 htsFile *hts_open(const char *fn, const char *mode);
@@ -62,7 +61,8 @@ typedef const char *(*hts_id2name_f)(void*, int);
 
 
 
-typedef struct { ...; } hts_itr_t;
+struct _h;
+typedef struct _h hts_itr_t;
 
 hts_idx_t *hts_idx_init(int n, int fmt, uint64_t offset0, int min_shift, int n_lvls);
 
@@ -144,7 +144,6 @@ typedef struct {
         bam1_core_t core;
         int l_data, m_data;
         uint8_t *data;
-        ...;
 } bam1_t;
 
 
@@ -323,7 +322,6 @@ typedef struct {
 
 
 typedef struct {
-	...;
 	int32_t n[3];
 
 } bcf_hdr_t;
@@ -372,7 +370,7 @@ static inline const char *bcf_hdr_id2name(const bcf_hdr_t *hdr, int rid);
 
 int bcf_unpack(bcf1_t *b, int which);
 
-const int BCF_DT_SAMPLE = 2;
+static const int BCF_DT_SAMPLE = 2;
 
 int bcf_get_genotypes(const bcf_hdr_t *hdr, bcf1_t *line, int **dst, int *ndst);
 int bcf_get_format_values(const bcf_hdr_t *hdr, bcf1_t *line, const char *tag, void **dst, int *ndst, int type);
