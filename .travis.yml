@@ -5,7 +5,7 @@ python:
 install:
   - ./.install-htslib.sh
   - pip install cffi
-  - pip install nosetests
+  - pip install nose
   - python setup.py develop
 
 script:
