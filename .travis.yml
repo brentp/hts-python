@@ -5,7 +5,8 @@ python:
 install:
   - ./.install-htslib.sh
   - pip install cffi
+  - pip install nosetests
   - python setup.py develop
 
 script:
-  - python -c "import hts; hts.doctests()"
+  - python setup.py nosetests

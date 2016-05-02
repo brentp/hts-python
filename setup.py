@@ -32,6 +32,10 @@ setup(name='hts',
       include_package_data=True,
       ext_modules=[ext],
       zip_safe=False,
-      install_requires=['cffi', 'setuptools>=0.6c11']
+      install_requires=['cffi', 'setuptools>=0.6c11'],
+      setup_requires=['nose>=1.0'],
+
       )
 
+
+from hts import htsffi

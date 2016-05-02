@@ -64,27 +64,26 @@ class Alignment(object):
 
         s_aux_ptr = libhts.bam_get_aux(self._b)
         i = 0
+        func = {'Z':libhts.bam_aux2Z, 'A': libhts.bam_aux2Z,
+                'i': libhts.bam_aux2i,
+                'I': libhts.bam_aux2i,
+                'c': libhts.bam_aux2i,
+                'C': libhts.bam_aux2i,
+                'f': libhts.bam_aux2f,
+                'F': libhts.bam_aux2f,
+                's': libhts.bam_aux2i,
+                'S': libhts.bam_aux2i}
+
         #print(str(self), file=sys.stderr)
-        while i + 4 <= l:
+        while i < l:
             key = "".join(chr(s) for s in s_aux_ptr[i:i + 2])
             ftype = chr(s_aux_ptr[i + 2])
-            if ftype == 'Z':
-                j = 0
-                while chr(s_aux_ptr[i + 4 + j]) != '\0':
-                    j += 1
-                val = s_aux_ptr[i + 3: i + 4 + j]
-                val = "".join("%c" % val[i] for i in range(1 + j))
-                i += j + 1
-            elif ftype in "iI":
-                t = "uint32_t" if ftype == "I" else "int32_t"
-                val = ffi.cast("%s *" % t, s_aux_ptr + i + 3)[0]
-            else:
-                val = s_aux_ptr[i + 3: i + 4][0]
-
-            #print(l, key, ftype, val, file=sys.stderr)
+            val = func[ftype](s_aux_ptr[i + 2:i + 2])
+            if ftype in 'ZA':
+                val = ffi.string(val)
             auxs.append((key, ftype, val))
-            i += 4
-        # TODO: other types from htslib/sam.c
+            i += 3 + libhts.skip_aux(s_aux_ptr[i + 2:l])
+
         return auxs
 
     def adjust_overlap_quality(self, other):

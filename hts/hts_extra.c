@@ -155,3 +155,47 @@ void tweak_overlap_quality(bam1_t *a, bam1_t *b) {
         }
     }
 }
+
+
+int aux_type2size(uint8_t type)
+{
+    switch (type) {
+    case 'A': case 'c': case 'C':
+        return 1;
+    case 's': case 'S':
+        return 2;
+    case 'i': case 'I': case 'f':
+        return 4;
+    case 'd':
+        return 8;
+    case 'Z': case 'H': case 'B':
+        return type;
+    default:
+        return 0;
+    }
+}
+
+
+int skip_aux(uint8_t *s)
+{
+    int size = aux_type2size(*s); ++s; // skip type
+    uint32_t n;
+	int k = 0;
+    switch (size) {
+    case 'Z':
+    case 'H':
+        while (*s) {++s;++k;}
+        return k + 1;
+    case 'B':
+        size = aux_type2size(*s);
+		++s;
+        memcpy(&n, s, 4); s += 4;
+        return n * size + 4;
+    case 0:
+        abort();
+        break;
+    default:
+        return size;
+    }
+}
+
