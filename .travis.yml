@@ -1,10 +1,11 @@
+sudo: required
 language: python
 python:
   - "2.7" 
 
 install:
   - ./.install-htslib.sh
-  - pip install cffi nose coverage coveralls
+  - pip install cffi nose coverage coveralls codecov
   - python setup.py develop
 
 script:
@@ -12,3 +13,4 @@ script:
 
 after_success:
   - coveralls
+  - codecov
