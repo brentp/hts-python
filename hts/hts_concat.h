@@ -130,15 +130,21 @@ typedef struct {
         void *sdict;
 } bam_hdr_t;
 
+
 typedef struct {
-        int32_t tid;
-        int32_t pos;
-        uint32_t bin:16, qual:8, l_qname:8;
-        uint32_t flag:16, n_cigar:16;
-        int32_t l_qseq;
-        int32_t mtid;
-        int32_t mpos;
-        int32_t isize;
+    int32_t tid;
+    int32_t pos;
+    uint16_t bin;
+    uint8_t qual;
+    uint8_t l_qname;
+    uint16_t flag;
+    uint8_t unused1;
+    uint8_t l_extranul;
+    uint32_t n_cigar;
+    int32_t l_qseq;
+    int32_t mtid;
+    int32_t mpos;
+    int32_t isize;
 } bam1_core_t;
 
 typedef struct {
@@ -220,13 +226,22 @@ uint32_t bam_cigar_op(uint32_t cigar);
 char bam_cigar_opchr(uint32_t cigar);
 uint32_t bam_cigar_oplen(uint32_t cigar);
 
-// #### pileup stuff
+
+typedef union {
+    void *p;
+    int64_t i;
+    double f;
+} bam_pileup_cd;
+
+
 typedef struct {
     bam1_t *b;
     int32_t qpos;
     int indel, level;
     uint32_t is_del:1, is_head:1, is_tail:1, is_refskip:1, aux:28;
+    bam_pileup_cd cd; // generic per-struct data, owned by caller.
 } bam_pileup1_t;
+
 
 typedef int (*bam_plp_auto_f)(void *data, bam1_t *b);
 

@@ -1,4 +1,5 @@
 *.pyc
+*.so
 
 .installed.cfg
 bin
