@@ -1,12 +1,14 @@
 language: python
 python:
-  - "2.7"
+  - "2.7" 
 
 install:
   - ./.install-htslib.sh
-  - pip install cffi
-  - pip install nose
+  - pip install cffi nose coverage coveralls
   - python setup.py develop
 
 script:
-  - python setup.py nosetests
+  - coverage run --source=hts setup.py nosetests
+
+after_success:
+  - coveralls

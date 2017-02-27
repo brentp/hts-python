@@ -6,7 +6,7 @@ pythonic wrapper for [htslib](https://github.com/samtools/htslib.git) C-API usin
 There is enough functionality for this to be useful, but it still needs a lot of work.
 
 [![Build Status](https://travis-ci.org/brentp/hts-python.svg?branch=master)](https://travis-ci.org/brentp/hts-python)
-
+[![Coverage Status](https://coveralls.io/repos/github/brentp/hts-python/badge.svg?branch=master)](https://coveralls.io/github/brentp/hts-python?branch=master)
 
 A taste
 -------
