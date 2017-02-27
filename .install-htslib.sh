@@ -1,5 +1,5 @@
 #!/bin/bash
-set -x
+set -ex
 DIR=${TRAVIS_BUILD_DIR}
 git clone https://github.com/samtools/htslib.git ${DIR}/htslib
 cd ${DIR}/htslib
