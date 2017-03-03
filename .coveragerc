@@ -1,4 +1,0 @@
-[run]
-source = hts
-[report]
-omit=hts/test/*

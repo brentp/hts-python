@@ -5,12 +5,13 @@ python:
 
 install:
   - ./.install-htslib.sh
-  - pip install cffi nose coverage coveralls codecov
+  - pip install cffi nose coverage coveralls codecov sphinx
   - python setup.py develop
 
 script:
+  - cd docs && make htmls && cd ..
   - coverage run --source=hts setup.py nosetests
 
 after_success:
-  - coveralls
   - codecov
+    #- coveralls

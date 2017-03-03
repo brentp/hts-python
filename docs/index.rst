@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 hts-python
-======================================
+==========
 
 hts-python is a pythonic wrapper for `htslib <https://github.com/samtools/htslib/>`_ using python `cffi <https://cffi.readthedocs.io/en/latest/>`_.
 
@@ -15,7 +15,7 @@ A taste of hts-python...
     >>> import os.path as op
 
     >>> from hts import Bam
-    >>> bam = Bam("hts/test/small.bam") #bam stolen from pybedtools [thanks]
+    >>> bam = Bam("hts/test/small.bam") 
     >>> list(bam.header.seqs)
     ['chr2L', 'chr2R', 'chr3L', 'chr3R', 'chr4', 'chrX']
 
@@ -42,9 +42,9 @@ A taste of hts-python...
     >>> str(a)[:40]
     'HWUSI-NAME:2:69:512:1017#0\t16\tchr2L\t9330'
 
+See Also
+========
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
-   intro
-   tutorial
+
